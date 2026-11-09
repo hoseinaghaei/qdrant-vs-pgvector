@@ -1,0 +1,6 @@
+datasets/
+results/
+logs/
+.venv/
+.git/
+**/__pycache__

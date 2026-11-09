@@ -1,0 +1,21 @@
+# Shared benchmark-client service, extended by docker-compose.qdrant.yml and
+# docker-compose.pgvector.yml. Paths are relative to this file.
+services:
+  bench:
+    build:
+      context: ..
+      dockerfile: docker/bench/Dockerfile
+    image: qdrant-vs-pgvector-bench:latest
+    working_dir: /work
+    volumes:
+      - ..:/work
+    environment:
+      DATASET_LOCAL_DIR: /work/datasets
+      RESULTS_LOCAL_DIR: /work/results
+      LOG_FILE: /work/logs/vectordb_bench.log
+      NUM_CONCURRENCY: ${NUM_CONCURRENCY:-1,5,10,20}
+    deploy:
+      resources:
+        limits:
+          cpus: "${BENCH_CPUS:-4}"
+          memory: ${BENCH_MEMORY:-4g}

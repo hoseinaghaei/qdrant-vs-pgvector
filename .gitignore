@@ -9,6 +9,9 @@ datasets/
 # Database volumes from Docker
 volumes/
 
+# Verbose VectorDBBench log (result JSONs in results/ are kept)
+logs/vectordb_bench.log
+
 # Python
 .venv/
 __pycache__/

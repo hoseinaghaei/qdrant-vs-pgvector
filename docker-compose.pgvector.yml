@@ -1,0 +1,61 @@
+# PostgreSQL + pgvector + benchmark client.
+#   docker compose -f docker-compose.pgvector.yml up -d pgvector
+#   docker compose -f docker-compose.pgvector.yml run --rm bench <command>
+name: bench-pgvector
+
+services:
+  pgvector:
+    image: pgvector/pgvector:0.8.7-pg18
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vectordb
+    # Sized for the 8 GB container limit; maintenance_work_mem lets HNSW builds stay in memory.
+    command:
+      - postgres
+      - -c
+      - shared_buffers=2GB
+      - -c
+      - effective_cache_size=6GB
+      - -c
+      - maintenance_work_mem=2GB
+      - -c
+      - max_parallel_maintenance_workers=3
+      - -c
+      - max_parallel_workers=4
+      - -c
+      - work_mem=64MB
+      - -c
+      - max_connections=200
+    shm_size: 2g
+    volumes:
+      - pgvector_data:/var/lib/postgresql
+      - ./docker/pgvector/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d vectordb"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "${DB_CPUS:-4}"
+          memory: ${DB_MEMORY:-8g}
+
+  bench:
+    extends:
+      file: docker/bench.yml
+      service: bench
+    environment:
+      PG_HOST: pgvector
+      PG_USER: postgres
+      PG_PASSWORD: postgres
+      PG_DB: vectordb
+    depends_on:
+      pgvector:
+        condition: service_healthy
+
+volumes:
+  pgvector_data:
