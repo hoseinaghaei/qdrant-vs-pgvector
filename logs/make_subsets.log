@@ -1,0 +1,4 @@
+dbpedia_openai_1k: 1000 vectors, 1000 queries, top-100 GT in 11.4s
+dbpedia_openai_10k: 10000 vectors, 1000 queries, top-100 GT in 2.5s
+dbpedia_openai_100k: 100000 vectors, 1000 queries, top-100 GT in 15.6s
+dbpedia_openai_1m: 975000 vectors, 1000 queries, top-100 GT in 70.5s | top-10 agreement with shipped GT: 1.0000

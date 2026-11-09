@@ -1,0 +1,20 @@
+# Datasets (multi-GB, re-creatable — see README)
+datasets/
+*.parquet
+*.npy
+*.tgz
+*.h5
+*.hdf5
+
+# Database volumes from Docker
+volumes/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
